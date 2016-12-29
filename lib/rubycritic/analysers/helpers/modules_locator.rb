@@ -7,14 +7,18 @@ module RubyCritic
       @analysed_module = analysed_module
     end
 
-    def first_name
-      names.first
+    def main_module_name
+      main_name = names.find do |name|
+        name.split('::').last == classified_filename
+      end
+
+      main_name || classified_filename
     end
 
     def names
       names = node.get_module_names
       if names.empty?
-        name_from_path
+        [classified_filename]
       else
         names
       end
@@ -30,12 +34,12 @@ module RubyCritic
       File.read(@analysed_module.path)
     end
 
-    def name_from_path
-      [file_name.split('_').map(&:capitalize).join]
-    end
-
     def file_name
       @analysed_module.pathname.basename.sub_ext('').to_s
+    end
+
+    def classified_filename
+      file_name.split('_').map(&:capitalize).join
     end
   end
 end

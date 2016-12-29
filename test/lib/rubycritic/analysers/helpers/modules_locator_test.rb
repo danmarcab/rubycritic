@@ -13,7 +13,10 @@ describe RubyCritic::ModulesLocator do
           methods_count: 1
         )
         RubyCritic::ModulesLocator.new(analysed_module).names
-                                  .must_equal ['Foo', 'Foo::Bar', 'Foo::Baz', 'Foo::Qux', 'Foo::Quux::Corge']
+                                  .must_equal [
+                                    'Foo', 'Foo::Bar', 'Foo::Baz',
+                                    'Foo::Qux', 'Foo::Quux', 'Foo::Quux::Corge'
+                                  ]
       end
     end
 
@@ -46,7 +49,36 @@ describe RubyCritic::ModulesLocator do
           methods_count: 0
         )
         capture_output_streams do
-          RubyCritic::ModulesLocator.new(analysed_module).names.must_equal ['Foo::NoMethods']
+          RubyCritic::ModulesLocator.new(analysed_module).names
+                                    .must_equal ['Foo', 'Foo::NoMethods', 'Foo::NoMethods::Helper']
+        end
+      end
+    end
+  end
+
+  describe '#main_module_name' do
+    context 'when a file defines a matching module name' do
+      it 'returns the name of the matching module' do
+        analysed_module = RubyCritic::AnalysedModule.new(
+          pathname: Pathname.new('test/samples/no_methods.rb'),
+          methods_count: 0
+        )
+
+        capture_output_streams do
+          RubyCritic::ModulesLocator.new(analysed_module).main_module_name.must_equal 'Foo::NoMethods'
+        end
+      end
+    end
+
+    context 'when a file does not define a matching module name' do
+      it 'returns the name based on the filename' do
+        analysed_module = RubyCritic::AnalysedModule.new(
+          pathname: Pathname.new('test/samples/module_names.rb'),
+          methods_count: 0
+        )
+
+        capture_output_streams do
+          RubyCritic::ModulesLocator.new(analysed_module).main_module_name.must_equal 'ModuleNames'
         end
       end
     end

@@ -1,5 +1,7 @@
 # master (unreleased)
 
+* [BUGFIX] Fix names when multiple modules defined on the same file (by [@danmarcab][])
+
 # 3.1.3 / 2016-12-19
 
 * [BUGFIX] Fix crash with the usage of an unavailable color in "rainbow" gem  (by [@thedrow][])
@@ -190,3 +192,4 @@
 [@josephpage]: https://github.com/josephpage
 [@hoshinotsuyoshi]: https://github.com/hoshinotsuyoshi
 [@thedrow]: https://github.com/thedrow
+[@danmarcab]: https://github.com/danmarcab

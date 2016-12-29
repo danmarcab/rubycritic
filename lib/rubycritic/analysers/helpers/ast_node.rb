@@ -26,16 +26,13 @@ module Parser
                            .flat_map(&:get_module_names)
 
         if MODULE_TYPES.include?(type)
-          if children_modules.empty?
-            [module_name]
-          else
+          [module_name] +
             children_modules.map do |children_module|
               "#{module_name}::#{children_module}"
             end
-          end
         else
           children_modules
-        end
+        end.uniq
       end
 
       private
